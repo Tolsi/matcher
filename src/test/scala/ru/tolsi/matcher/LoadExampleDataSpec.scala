@@ -4,13 +4,13 @@ class LoadExampleDataSpec extends UnitSpec with OrderParserSpec with ClientInfoP
   val l = new Object with LoadExampleData
   describe("LoadExampleData") {
     describe("loadCreateOrdersRequests method") {
-      it("should load OrderOperation.Create from file") {
-        checkOrders(l.loadCreateOrdersRequests.toList)
+      it("should load OrderOperation.Create from default file") {
+        checkOrders(l.loadCreateOrdersRequests().toList)
       }
     }
     describe("loadClients method") {
-      it("should load ClientInfo from file") {
-        checkClients(l.loadClients.toList)
+      it("should load ClientInfo from default file") {
+        checkClients(l.loadClients().toList)
       }
     }
   }
