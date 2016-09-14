@@ -24,8 +24,8 @@ abstract class AbstractExample(
     createOrdersRequests <- loadCreateOrdersRequestsFuture
     _ <- {
       logger.debug("Calculation started")
-      val matcher = new Matcher(clientsRepository, orderExecutor, orderBook)
-      matcher.apply(createOrdersRequests)
+      val exchange = new Exchange(clientsRepository, orderExecutor, orderBook)
+      exchange.apply(createOrdersRequests)
     }
     clients <- clientsRepository.getAll
     clientsBalances <- Future.sequence(clients.map(c => c.getAllBalances.map(balance => c.id -> balance)))

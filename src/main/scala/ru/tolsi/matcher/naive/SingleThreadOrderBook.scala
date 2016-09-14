@@ -20,12 +20,10 @@ class SingleThreadOrderBook extends OrderBook with StrictLogging {
   override def addOrMatch(order: Order)(implicit ec: ExecutionContext): Future[AddOrMatchResult] = Future.successful {
     findOrderWhichCanApply(order, instrumentsOrderBook) match {
       case Some(matchedOrder) =>
-        instrumentsOrderBook += order.asset -> (instrumentsOrderBook(order.asset) - ((matchedOrder.price,
-          matchedOrder.qty, OrderType.invert(matchedOrder.`type`))))
+        instrumentsOrderBook(order.asset) - ((matchedOrder.price, matchedOrder.qty, OrderType.invert(matchedOrder.`type`)))
         Matched(ReverseOrders(order, matchedOrder))
       case None =>
-        instrumentsOrderBook += order.asset -> (instrumentsOrderBook.getOrElse(order.asset,
-          mutable.AnyRefMap.empty) += ((order.price, order.qty, order.`type`) -> order))
+        instrumentsOrderBook.getOrElseUpdate(order.asset, mutable.AnyRefMap.empty) += ((order.price, order.qty, order.`type`) -> order)
         Added
     }
   }
