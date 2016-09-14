@@ -30,13 +30,14 @@ abstract class AbstractExample(
     clients <- clientsRepository.getAll
     clientsBalances <- Future.sequence(clients.map(c => c.getAllBalances.map(balance => c.id -> balance)))
   } yield {
-    def logClientBalance(id: String, balances: Map[String, Long]): Unit = {
+    def logClientBalance(userInfo: (String, Map[String, Long])): Unit = {
+      val (id, balances) = userInfo
       // todo log to file with marker
       logger.info(MarkerFactory.getMarker("results"), Seq(id, balances("USD"), balances("A"), balances("B"), balances(
         "C"), balances("D")).mkString("\t"))
     }
     logger.info(s"Final results:")
-    clientsBalances.toSeq.sortBy(_._1).foreach(info => logClientBalance(info._1, info._2))
+    clientsBalances.toSeq.sortBy(_._1).foreach(logClientBalance)
   }
   Await.result(processFuture, Duration.Inf)
   logger.debug("Calculation finished")
