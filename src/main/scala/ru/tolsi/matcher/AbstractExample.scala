@@ -5,17 +5,17 @@ import scala.concurrent.forkjoin.ForkJoinPool
 import scala.concurrent.{Await, ExecutionContext, Future}
 import com.typesafe.scalalogging.StrictLogging
 import org.slf4j.MarkerFactory
-import ru.tolsi.matcher.naive.ThreadUnsafeClient
 
-abstract class AbstractExample(
-    clientRepository: Seq[ThreadUnsafeClient] => ClientRepository[Long],
+abstract class AbstractExample[C <: Client[Long]](
+    buildClient: ClientInfo => C,
+    clientRepository: Seq[C] => ClientRepository[Long],
     orderExecutor: ReverseOrdersExecutor[Long],
     orderBook: OrderBook) extends App with LoadExampleData with StrictLogging {
 
   val ioEc = ExecutionContext.global
   implicit val ec = ExecutionContext.fromExecutor(new ForkJoinPool(1))
 
-  val loadClientsFuture = Future(loadClients.map(ThreadUnsafeClient.fromClientInfo))(ioEc)
+  val loadClientsFuture = Future(loadClients.map(buildClient))(ioEc)
   val loadCreateOrdersRequestsFuture = Future(loadCreateOrdersRequests)(ioEc)
 
   val processFuture = for {
@@ -25,7 +25,7 @@ abstract class AbstractExample(
     _ <- {
       logger.debug("Calculation started")
       val exchange = new Exchange(clientsRepository, orderExecutor, orderBook)
-      exchange.apply(createOrdersRequests)
+      exchange(createOrdersRequests)
     }
     clients <- clientsRepository.getAll
     clientsBalances <- Future.sequence(clients.map(c => c.getAllBalances.map(balance => c.id -> balance)))
