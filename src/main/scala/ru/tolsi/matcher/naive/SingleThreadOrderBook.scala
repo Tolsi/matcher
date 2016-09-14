@@ -5,7 +5,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import com.typesafe.scalalogging.StrictLogging
 import ru.tolsi.matcher.{Order, OrderBook, OrderType, ReverseOrders}
 
-object SingleThreadOrderBook {
+private[naive] object SingleThreadOrderBook {
   private[SingleThreadOrderBook] def findOrderWhichCanApply(
       order: Order,
       orderBook: collection.Map[String, collection.Map[(Int, Int, OrderType.Value), Order]]): Option[Order] = {
@@ -13,7 +13,7 @@ object SingleThreadOrderBook {
     orderBook.get(order.asset).flatMap(_.get((price, qty, OrderType.invert(`type`))))
   }
 }
-class SingleThreadOrderBook extends OrderBook with StrictLogging {
+private[naive] class SingleThreadOrderBook extends OrderBook with StrictLogging {
   import OrderBook._
   import SingleThreadOrderBook._
   private val instrumentsOrderBook = mutable.AnyRefMap.empty[String, mutable.AnyRefMap[(Int, Int, OrderType.Value), Order]]
