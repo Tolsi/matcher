@@ -1,7 +1,8 @@
 package ru.tolsi.matcher
 
+// todo test
 case class ReverseOrders(order: Order, reverseOrder: Order) {
-  assert(order.price == reverseOrder.price)
-  assert(order.qty == reverseOrder.qty)
-  assert(order.`type` != reverseOrder.`type`)
+  require(order.price == reverseOrder.price)
+  require(order.qty == reverseOrder.qty)
+  require(order.`type` != reverseOrder.`type`)
 }

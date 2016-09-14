@@ -4,8 +4,10 @@ import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
 import com.typesafe.scalalogging.StrictLogging
 import ru.tolsi.matcher.{Order, OrderBook, OrderType, ReverseOrders}
+import ru.tolsi.matcher.OrderBook.AddOrMatchResult._
 
 private[naive] object SingleThreadOrderBook {
+  // todo test
   private[SingleThreadOrderBook] def findOrderWhichCanApply(
       order: Order,
       orderBook: collection.Map[String, collection.Map[(Int, Int, OrderType.Value), Order]]): Option[Order] = {
@@ -17,6 +19,7 @@ private[naive] class SingleThreadOrderBook extends OrderBook with StrictLogging 
   import OrderBook._
   import SingleThreadOrderBook._
   private val instrumentsOrderBook = mutable.AnyRefMap.empty[String, mutable.AnyRefMap[(Int, Int, OrderType.Value), Order]]
+  // todo test
   override def addOrMatch(order: Order)(implicit ec: ExecutionContext): Future[AddOrMatchResult] = Future.successful {
     findOrderWhichCanApply(order, instrumentsOrderBook) match {
       case Some(matchedOrder) =>

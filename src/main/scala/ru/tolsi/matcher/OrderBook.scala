@@ -3,9 +3,11 @@ package ru.tolsi.matcher
 import scala.concurrent.{ExecutionContext, Future}
 
 object OrderBook {
+  object AddOrMatchResult {
+    val Added = Left[Unit, ReverseOrders]()
+    def Matched(reverseOrders: ReverseOrders) = Right[Unit, ReverseOrders](reverseOrders)
+  }
   type AddOrMatchResult = Either[Unit, ReverseOrders]
-  val Added = Left[Unit, ReverseOrders]()
-  def Matched(reverseOrders: ReverseOrders) = Right[Unit, ReverseOrders](reverseOrders)
 }
 abstract class OrderBook {
   import OrderBook._

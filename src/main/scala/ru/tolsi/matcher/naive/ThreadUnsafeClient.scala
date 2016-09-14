@@ -5,6 +5,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import ru.tolsi.matcher.{Client, ClientInfo}
 
 private[naive] object ThreadUnsafeClient {
+  // todo test
   def fromClientInfo(clientInfo: ClientInfo): ThreadUnsafeClient = {
     val balances = new mutable.AnyRefMap[String, Long]()
     Seq("USD" -> clientInfo.usdBalance, "A" -> clientInfo.aBalance, "B" -> clientInfo.bBalance, "C" -> clientInfo.cBalance,
@@ -13,6 +14,7 @@ private[naive] object ThreadUnsafeClient {
   }
 }
 
+// todo test
 private[naive] class ThreadUnsafeClient(val id: String, balances: mutable.AnyRefMap[String, Long]) extends Client[Long] {
   override def getBalance(asset: String)(implicit ec: ExecutionContext): Future[Long] = Future.successful(balances.getOrElse(asset, 0L))
   override def getAllBalances(implicit ec: ExecutionContext): Future[Map[String, Long]] = Future.successful(balances.toMap.withDefaultValue(0L))

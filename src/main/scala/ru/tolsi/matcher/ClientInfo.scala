@@ -17,4 +17,6 @@ object ClientInfo {
     ClientInfo(array(0), array(1).toLong, array(2).toLong, array(3).toLong, array(4).toLong, array(5).toLong)
   }
 }
-case class ClientInfo(id: String, usdBalance: Long, aBalance: Long, bBalance: Long, cBalance: Long, dBalance: Long)
+case class ClientInfo(id: String, usdBalance: Long, aBalance: Long, bBalance: Long, cBalance: Long, dBalance: Long) {
+  require(!id.isEmpty)
+}

@@ -9,7 +9,7 @@ object OrderOperation {
     private[matcher] def loadFromFile(file: File): Iterator[Either[String, Create]] = {
       Source.fromFile(file).getLines.zipWithIndex.map(l => l -> parseFromLine(l._1)).map {
         case (_, Success(info)) => Right(info)
-        case (line, Failure(f)) => Left(s"Can't parse order info from line #${line._2 + 1 } '${line._1 }': ${f.getMessage}")
+        case (line, Failure(f)) => Left(s"Can't parse order info from line #${line._2 + 1 }: ${line._1 }")
       }
     }
     private[matcher] def parseFromLine(line: String): Try[Create] = Try {
@@ -22,6 +22,11 @@ object OrderOperation {
       Create(array(0), orderType, array(2), array(3).toInt, array(4).toInt)
     }
   }
-  case class Create(creator: String, `type`: OrderType.Value, asset: String, price: Int, qty: Int) extends OrderOperation
+  case class Create(creator: String, `type`: OrderType.Value, asset: String, price: Int, qty: Int) extends OrderOperation {
+    require(!creator.isEmpty)
+    require(!asset.isEmpty)
+    require(qty > 0)
+    require(price > 0)
+  }
 }
 trait OrderOperation

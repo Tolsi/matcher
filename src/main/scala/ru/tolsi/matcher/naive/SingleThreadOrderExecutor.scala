@@ -4,6 +4,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import ru.tolsi.matcher.{Client, ClientRepository, OrderType, ReverseOrders, ReverseOrdersExecutor}
 
 private[naive] object SingleThreadOrderExecutor extends ReverseOrdersExecutor[Long] {
+  // todo test
   def execute(orders: ReverseOrders, clientRepository: ClientRepository[Long])(implicit ec: ExecutionContext): Future[Unit] = {
     val ReverseOrders(order, reverseOrder) = orders
     for {
