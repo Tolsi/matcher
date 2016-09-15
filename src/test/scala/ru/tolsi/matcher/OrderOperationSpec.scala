@@ -4,8 +4,7 @@ import java.io.File
 import scala.util._
 import ru.tolsi.matcher.util.EitherUtils._
 
-trait OrderParserSpec {
-  self: UnitSpec =>
+trait OrderParserSpec { self: UnitSpec =>
   def checkOrdersErrors(errors: Seq[String]): Unit = {
     assert(errors.size == 2)
     errors should contain inOrderOnly(
@@ -66,22 +65,22 @@ class OrderOperationSpec extends UnitSpec with OrderParserSpec {
     }
     describe("on create") {
       it("should fail with empty id") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("", OrderType.Buy, "C", 15, 4)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("", OrderType.Buy, "C", 15, 4)
       }
       it("should fail with empty asset") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 4)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 4)
       }
       it("should fail with negative price") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", -15, 4)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", -15, 4)
       }
       it("should fail with negative qty") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, -4)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, -4)
       }
       it("should fail with zero price") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 0, 4)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 0, 4)
       }
       it("should fail with zero qty") {
-        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 0)
+        an[IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 0)
       }
     }
   }

@@ -24,7 +24,7 @@ class ThreadUnsafeClientSpec extends UnitSpec {
     it("should return asset balance") {
       val c = ThreadUnsafeClient.fromClientInfo(ClientInfo("1", 0, 1, 2, 3, 4))
       whenReady(c.getBalance("A")) { balance =>
-        balance should be (1)
+        balance should be(1)
       }
     }
   }

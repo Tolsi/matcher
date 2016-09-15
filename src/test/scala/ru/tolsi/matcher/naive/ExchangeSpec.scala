@@ -13,9 +13,11 @@ class ExchangeSpec extends UnitSpec
   override def ordersExecutor: SingleThreadOrderExecutor = new SingleThreadOrderExecutor
 
   override def extraCheck(
-      repo: ThreadUnsafeClientRepository, orderBook: SingleThreadOrderBook, executor: SingleThreadOrderExecutor): Unit = {
+      repo: ThreadUnsafeClientRepository,
+      orderBook: SingleThreadOrderBook,
+      executor: SingleThreadOrderExecutor): Unit = {
     forAll(orderBook.instrumentsOrderBook.values.flatMap(_.values.map(_.isEmpty))) { isEmpty =>
-      isEmpty should be (true)
+      isEmpty should be(true)
     }
   }
 }

@@ -4,8 +4,7 @@ import java.io.File
 import scala.util._
 import ru.tolsi.matcher.util.EitherUtils._
 
-trait ClientInfoParserSpec {
-  self: UnitSpec =>
+trait ClientInfoParserSpec { self: UnitSpec =>
   def checkClientsErrors(errors: Seq[String]): Unit = {
     assert(errors.size == 2)
     errors should contain inOrderOnly(
@@ -30,10 +29,10 @@ class ClientInfoSpec extends UnitSpec with LoadExampleData {
         ClientInfo.parseFromLine("A\t1\t2\t3\t4\t5") should be(Success(ClientInfo("A", 1, 2, 3, 4, 5)))
       }
       it("should not load ClientInfo from line with empty id") {
-        ClientInfo.parseFromLine("\t1\t2\t3\t4\t5") should be ('failure)
+        ClientInfo.parseFromLine("\t1\t2\t3\t4\t5") should be('failure)
       }
       it("should not load ClientInfo from incorrect line") {
-        ClientInfo.parseFromLine("hahayoureadthis") should be ('failure)
+        ClientInfo.parseFromLine("hahayoureadthis") should be('failure)
       }
     }
     describe("loadFromFile method") {
@@ -60,7 +59,7 @@ class ClientInfoSpec extends UnitSpec with LoadExampleData {
     }
     describe("on create") {
       it("should fail with empty id") {
-        an [IllegalArgumentException] should be thrownBy ClientInfo("", 1, 2, 3, 4, 5)
+        an[IllegalArgumentException] should be thrownBy ClientInfo("", 1, 2, 3, 4, 5)
       }
     }
   }

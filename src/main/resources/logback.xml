@@ -23,7 +23,7 @@
     </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="RESULTS" />
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="RESULTS"/>
     </root>
 </configuration>

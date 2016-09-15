@@ -3,8 +3,8 @@ package ru.tolsi.matcher.naive
 import scala.collection.mutable
 import scala.concurrent.{ExecutionContext, Future}
 import com.typesafe.scalalogging.StrictLogging
-import ru.tolsi.matcher.{Order, OrderBook, OrderType, ReverseOrders}
 import ru.tolsi.matcher.OrderBook.AddOrMatchResult._
+import ru.tolsi.matcher.{Order, OrderBook, OrderType, ReverseOrders}
 
 private[naive] object SingleThreadOrderBook {
   private[naive] def dequeueOrderWhichCanApply(

@@ -22,7 +22,8 @@ object OrderOperation {
       Create(array(0), orderType, array(2), array(3).toInt, array(4).toInt)
     }
   }
-  case class Create(creator: String, `type`: OrderType.Value, asset: String, price: Int, qty: Int) extends OrderOperation {
+  case class Create(creator: String, `type`: OrderType.Value, asset: String, price: Int, qty: Int)
+    extends OrderOperation {
     require(!creator.isEmpty)
     require(!asset.isEmpty)
     require(qty > 0)
