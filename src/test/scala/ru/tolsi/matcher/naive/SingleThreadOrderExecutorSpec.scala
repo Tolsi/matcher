@@ -1,6 +1,8 @@
 package ru.tolsi.matcher.naive
 
 import scala.concurrent.Future
+import org.scalatest.concurrent.PatienceConfiguration.Timeout
+import org.scalatest.time.{Seconds, Span}
 import ru.tolsi.matcher.{ClientInfo, Order, OrderType, ReverseOrders, UnitSpec}
 
 class SingleThreadOrderExecutorSpec extends UnitSpec {
@@ -17,7 +19,7 @@ class SingleThreadOrderExecutorSpec extends UnitSpec {
         users <- repo.getAll
         userBalances <- Future.sequence(users.map(u => u.getAllBalances.map(b => u.id -> b)))
       } yield userBalances
-      whenReady(balancesFuture) { case userBalances =>
+      whenReady(balancesFuture, Timeout(Span(10, Seconds))) { case userBalances =>
         val userBalancesMap = userBalances.toMap
         userBalancesMap("1")("A") should be(1)
         userBalancesMap("1")("USD") should be(-1)
@@ -36,7 +38,7 @@ class SingleThreadOrderExecutorSpec extends UnitSpec {
         users <- repo.getAll
         userBalances <- Future.sequence(users.map(u => u.getAllBalances.map(b => u.id -> b)))
       } yield userBalances
-      whenReady(balancesFuture) { case userBalances =>
+      whenReady(balancesFuture, Timeout(Span(10, Seconds))) { case userBalances =>
         val userBalancesMap = userBalances.toMap
         userBalancesMap("1")("A") should be(0)
         userBalancesMap("1")("USD") should be(0)
