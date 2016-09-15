@@ -21,5 +21,5 @@ private[naive] class ThreadUnsafeClient(val id: String, private[naive] val balan
   override def getAllBalances(implicit ec: ExecutionContext): Future[Map[String, Long]] =
     Future.successful(balances.toMap.withDefaultValue(0L))
   override def addDeltaToBalance(asset: String, value: Long)(implicit ec: ExecutionContext): Future[Unit] =
-    Future.successful(balances += asset -> (balances(asset) + value))
+    Future.successful(balances += asset -> (balances.getOrElseUpdate(asset, 0L) + value))
 }

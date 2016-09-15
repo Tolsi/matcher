@@ -42,5 +42,12 @@ class ThreadUnsafeClientRepositorySpec extends UnitSpec {
         })
       }
     }
+    it("should return none for unexisted user by id") {
+      val c = ThreadUnsafeClient.fromClientInfo(ClientInfo("1", 0, 1, 2, 3, 4))
+      val repo = ThreadUnsafeClientRepository(Seq(c))
+      whenReady(repo.get("2")) { userOpt =>
+        userOpt should be ('empty)
+      }
+    }
   }
 }

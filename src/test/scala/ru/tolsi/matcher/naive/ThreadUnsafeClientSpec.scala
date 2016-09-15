@@ -27,6 +27,12 @@ class ThreadUnsafeClientSpec extends UnitSpec {
         balance should be(1)
       }
     }
+    it("should return 0 for not existed asset balance") {
+      val c = ThreadUnsafeClient.fromClientInfo(ClientInfo("1", 0, 1, 2, 3, 4))
+      whenReady(c.getBalance("ASF")) { balance =>
+        balance should be(0)
+      }
+    }
   }
   describe("getAllBalances method") {
     it("should return all asset balances") {
@@ -45,6 +51,16 @@ class ThreadUnsafeClientSpec extends UnitSpec {
       } yield balances
       whenReady(future) { balances =>
         balances should be(Map("USD" -> 0L, "A" -> 101L, "B" -> 2L, "C" -> 3L, "D" -> 4L))
+      }
+    }
+    it("should update unexisted on user asset by delta") {
+      val c = ThreadUnsafeClient.fromClientInfo(ClientInfo("1", 0, 1, 2, 3, 4))
+      val future = for {
+        _ <- c.addDeltaToBalance("S", 100)
+        balances <- c.getAllBalances
+      } yield balances
+      whenReady(future) { balances =>
+        balances should be(Map("USD" -> 0L, "A" -> 1L, "B" -> 2L, "C" -> 3L, "D" -> 4L, "S" -> 100L))
       }
     }
   }

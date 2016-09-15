@@ -27,6 +27,13 @@ class SingleThreadOrderExecutorSpec extends UnitSpec {
         userBalancesMap("2")("USD") should be(1)
       }
     }
+    it("should fail on execure orders on unexisted users from repo") {
+      val executor = new SingleThreadOrderExecutor
+      val repo = ThreadUnsafeClientRepository(Seq(ClientInfo("1", 0L, 0L, 0L, 0L, 0L)).map(ThreadUnsafeClient.fromClientInfo))
+      val future = executor.execute(ReverseOrders(Order(1, "1", OrderType.Buy, "A", 1, 1), Order(1, "2", OrderType.Sell,
+        "A", 1, 1)), repo)
+      future.failed.futureValue shouldBe an[IllegalStateException]
+    }
     it("should execure reverse orders of the same user") {
       val executor = new SingleThreadOrderExecutor
       val repo = ThreadUnsafeClientRepository(Seq(ClientInfo("1", 0L, 0L, 0L, 0L, 0L), ClientInfo("1", 0L, 0L, 0L, 0L,
