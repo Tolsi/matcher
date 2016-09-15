@@ -7,7 +7,7 @@ I would like to add several concurrent and more scalable solutions to this probl
 # How to use
 
 ## Naive solution
-Use can run it using `sbt "runMain ru.tolsi.matcher.naive.Main"` with embedded input files or you can pass absolute paths to input files `sbt "runMain ru.tolsi.matcher.naive.Main" /.../clients.txt /.../orders.txt`.
+Use can run it using `sbt "runMain ru.tolsi.matcher.naive.Main"` with embedded input files or you can pass absolute paths to input files `sbt "runMain ru.tolsi.matcher.naive.Main /.../clients.txt /.../orders.txt"`.
 
 # Tests
 You can start tests using `sbt test`.
