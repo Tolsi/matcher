@@ -14,7 +14,7 @@ abstract class AbstractExample[C <: Client[Long]](
   val ioEc = ExecutionContext.global
 
   val loadClientsFuture = Future(loadClients(args.lift(0)).map(buildClient))(ioEc)
-  val loadCreateOrdersRequestsFuture = Future(loadCreateOrdersRequests(args.lift(1)))(ioEc)
+  val loadCreateOrdersRequestsFuture = Future(loadCreateOrdersRequests(args.lift(0)))(ioEc)
 
   val processFuture = for {
     clients <- loadClientsFuture

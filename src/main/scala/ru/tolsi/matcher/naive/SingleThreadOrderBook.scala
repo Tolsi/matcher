@@ -7,26 +7,29 @@ import ru.tolsi.matcher.{Order, OrderBook, OrderType, ReverseOrders}
 import ru.tolsi.matcher.OrderBook.AddOrMatchResult._
 
 private[naive] object SingleThreadOrderBook {
-  // todo test
-  private[SingleThreadOrderBook] def findOrderWhichCanApply(
+  private[naive] def dequeueOrderWhichCanApply(
       order: Order,
-      orderBook: collection.Map[String, collection.Map[(Int, Int, OrderType.Value), Order]]): Option[Order] = {
+      orderBook: collection.Map[String, collection.Map[(Int, Int, OrderType.Value), mutable.Queue[Order]]]): Option[Order] = {
     import order._
-    orderBook.get(order.asset).flatMap(_.get((price, qty, OrderType.invert(`type`))))
+    orderBook.get(order.asset).flatMap(_.get((price, qty, OrderType.invert(`type`))).flatMap(_.dequeueFirst(_ => true)))
   }
 }
 private[naive] class SingleThreadOrderBook extends OrderBook with StrictLogging {
   import OrderBook._
   import SingleThreadOrderBook._
-  private val instrumentsOrderBook = mutable.AnyRefMap.empty[String, mutable.AnyRefMap[(Int, Int, OrderType.Value), Order]]
-  // todo test
+
+  private[naive] val instrumentsOrderBook = mutable.AnyRefMap
+    .empty[String, mutable.AnyRefMap[(Int, Int, OrderType.Value), mutable.Queue[Order]]]
+
   override def addOrMatch(order: Order)(implicit ec: ExecutionContext): Future[AddOrMatchResult] = Future.successful {
-    findOrderWhichCanApply(order, instrumentsOrderBook) match {
+    dequeueOrderWhichCanApply(order, instrumentsOrderBook) match {
       case Some(matchedOrder) =>
-        instrumentsOrderBook(order.asset) - ((matchedOrder.price, matchedOrder.qty, OrderType.invert(matchedOrder.`type`)))
         Matched(ReverseOrders(order, matchedOrder))
       case None =>
-        instrumentsOrderBook.getOrElseUpdate(order.asset, mutable.AnyRefMap.empty) += ((order.price, order.qty, order.`type`) -> order)
+        import order._
+        instrumentsOrderBook.getOrElseUpdate(order.asset,
+          new mutable.AnyRefMap[(Int, Int, OrderType.Value), mutable.Queue[Order]]())
+          .getOrElseUpdate((price, qty, `type`), mutable.Queue.empty[Order]) += order
         Added
     }
   }

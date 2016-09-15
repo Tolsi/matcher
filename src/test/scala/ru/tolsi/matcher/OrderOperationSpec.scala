@@ -46,6 +46,12 @@ class OrderOperationSpec extends UnitSpec with OrderParserSpec {
       it("should not load OrderOperation.Create from line with negative qty") {
         OrderOperation.Create.parseFromLine("A\tz\tA\t3\t-5") should be('failure)
       }
+      it("should not load OrderOperation.Create from line with zero price") {
+        OrderOperation.Create.parseFromLine("A\tz\tA\t0\t5") should be('failure)
+      }
+      it("should not load OrderOperation.Create from line with zero qty") {
+        OrderOperation.Create.parseFromLine("A\tz\tA\t3\t0") should be('failure)
+      }
       it("should not load OrderOperation.Create from incorrect line") {
         OrderOperation.Create.parseFromLine("omgpony") should be('failure)
       }
@@ -56,6 +62,26 @@ class OrderOperationSpec extends UnitSpec with OrderParserSpec {
           new File(getClass.getResource("/orders.txt").toURI)))
         checkOrdersErrors(errors.toList)
         checkOrders(clients.toList)
+      }
+    }
+    describe("on create") {
+      it("should fail with empty id") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("", OrderType.Buy, "C", 15, 4)
+      }
+      it("should fail with empty asset") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 4)
+      }
+      it("should fail with negative price") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", -15, 4)
+      }
+      it("should fail with negative qty") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, -4)
+      }
+      it("should fail with zero price") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 0, 4)
+      }
+      it("should fail with zero qty") {
+        an [IllegalArgumentException] should be thrownBy OrderOperation.Create("A", OrderType.Buy, "", 15, 0)
       }
     }
   }

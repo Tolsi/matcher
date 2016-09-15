@@ -58,5 +58,10 @@ class ClientInfoSpec extends UnitSpec with LoadExampleData {
         )
       }
     }
+    describe("on create") {
+      it("should fail with empty id") {
+        an [IllegalArgumentException] should be thrownBy ClientInfo("", 1, 2, 3, 4, 5)
+      }
+    }
   }
 }

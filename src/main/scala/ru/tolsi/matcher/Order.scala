@@ -9,7 +9,6 @@ object OrderType extends Enumeration {
   }
 }
 
-// todo test
 case class Order(id: Long, creator: String, `type`: OrderType.Value, asset: String, price: Int, qty: Int) {
   require(!creator.isEmpty)
   require(!asset.isEmpty)

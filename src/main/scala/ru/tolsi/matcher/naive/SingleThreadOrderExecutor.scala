@@ -3,8 +3,7 @@ package ru.tolsi.matcher.naive
 import scala.concurrent.{ExecutionContext, Future}
 import ru.tolsi.matcher.{Client, ClientRepository, OrderType, ReverseOrders, ReverseOrdersExecutor}
 
-private[naive] object SingleThreadOrderExecutor extends ReverseOrdersExecutor[Long] {
-  // todo test
+private[naive] class SingleThreadOrderExecutor extends ReverseOrdersExecutor[Long] {
   def execute(orders: ReverseOrders, clientRepository: ClientRepository[Long])(implicit ec: ExecutionContext): Future[Unit] = {
     val ReverseOrders(order, reverseOrder) = orders
     for {
@@ -15,10 +14,10 @@ private[naive] object SingleThreadOrderExecutor extends ReverseOrdersExecutor[Lo
         case (Some(orderCreator), Some(reverseOrderCreator)) =>
           import order._
           def buy(buyer: Client[Long], seller: Client[Long]): Unit = {
-            buyer.addDeltaToBalance(asset, price * qty)
+            buyer.addDeltaToBalance(asset, qty)
             // todo currency?
             buyer.addDeltaToBalance("USD", -price * qty)
-            seller.addDeltaToBalance(asset, -(price * qty))
+            seller.addDeltaToBalance(asset, -qty)
             seller.addDeltaToBalance("USD", price * qty)
           }
           if (`type` == OrderType.Buy) {

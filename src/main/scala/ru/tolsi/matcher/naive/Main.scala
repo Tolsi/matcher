@@ -6,5 +6,5 @@ import ru.tolsi.matcher.AbstractExample
 
 object Main extends AbstractExample(ThreadUnsafeClient.fromClientInfo,
   ThreadUnsafeClientRepository.apply,
-  SingleThreadOrderExecutor,
+  new SingleThreadOrderExecutor,
   new SingleThreadOrderBook)(ExecutionContext.fromExecutor(new ForkJoinPool(1)))
