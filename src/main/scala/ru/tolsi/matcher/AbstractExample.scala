@@ -38,4 +38,5 @@ abstract class AbstractExample[C <: Client[Long]](
   }
   Await.result(processFuture, Duration.Inf)
   logger.debug("Calculation finished")
+  logger.debug("Results were recorded in the file 'results.txt'")
 }
